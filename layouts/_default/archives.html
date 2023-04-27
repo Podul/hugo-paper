@@ -5,7 +5,7 @@
     <h1 class="!my-0 pb-2.5">{{ .Title }}</h1>
 
     {{ if ne .Type "page" }}
-    <div class="text-sm opacity-60">
+    <div class="text-sm opacity-50">
       {{ if .Date }}
       <time>{{ .Date | time.Format site.Params.date_format }}</time>
       {{ end }}<!---->
@@ -19,8 +19,21 @@
     {{ end }}
   </header>
 
-  <section>{{ .Content }}</section>
+  <section>
+    {{ range (.Site.RegularPages.GroupByDate "2006") }}
+    <h3>{{ .Key }}</h3>
 
+        <ul class="archive-list">
+        {{ range (where .Pages "Type" "in" site.Params.mainSections) }}
+            <li>
+              <time class="text-sm opacity-50">{{ .PublishDate.Format site.Params.date_format }}</time>
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </li>
+        {{ end }}
+    </ul>
+    {{ end }}
+
+  </section>
   <!-- Post Tags -->
   {{ if .Params.tags }}
   <footer class="mt-12 flex flex-wrap">
